@@ -112,13 +112,13 @@
 			} else if (value === 'K') {
 				return 0;
 			} else {
-				return value;
+				return parseInt(value) || 0;
 			}
 		});
 
 		const session: Session = {
-			player: (parseInt(inputs[0]) + parseInt(inputs[2]) + parseInt(inputs[4])) % 10,
-			banker: (parseInt(inputs[1]) + parseInt(inputs[3]) + parseInt(inputs[5])) % 10,
+			player: (inputs[0] + inputs[2] + inputs[4]) % 10,
+			banker: (inputs[1] + inputs[3] + inputs[5]) % 10,
 			playerPair: inputs[0] === inputs[2],
 			bankerPair: inputs[1] === inputs[3]
 		};
