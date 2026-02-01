@@ -1,0 +1,9 @@
+{
+  "short_name": "Baccarat Trend",
+  "name": "Baccarat Trend Tracker",
+  "description": "An application to track and analyze baccarat game trends.",
+  "version": "1.0.0",
+  "manifest_version": 3,
+  "start_url": "/index.html",
+  "display": "standalone"
+}
