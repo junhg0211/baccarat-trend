@@ -18,6 +18,8 @@
 	function appendSession(session: Session) {
 		const playerWon = session.player >= session.banker;
 
+		console.log(session);
+
 		// find index where next session is empty
 		let i;
 		for (i = 0; i <= cells[0].length; i++) {
@@ -108,17 +110,17 @@
 			} else if (value === 'J') {
 				return 0;
 			} else if (value === 'Q') {
-				return 0;
+				return 0.1;
 			} else if (value === 'K') {
-				return 0;
+				return 0.2;
 			} else {
 				return parseInt(value) || 0;
 			}
 		});
 
 		const session: Session = {
-			player: (inputs[0] + inputs[2] + inputs[4]) % 10,
-			banker: (inputs[1] + inputs[3] + inputs[5]) % 10,
+			player: parseInt(inputs[0] + inputs[2] + inputs[4]) % 10,
+			banker: parseInt(inputs[1] + inputs[3] + inputs[5]) % 10,
 			playerPair: inputs[0] === inputs[2],
 			bankerPair: inputs[1] === inputs[3]
 		};
