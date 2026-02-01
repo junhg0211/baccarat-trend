@@ -131,9 +131,11 @@
 			input.value = '';
 		});
 
-		// Focus first input
-		const firstInput = document.getElementById('digit-0') as HTMLInputElement;
-		firstInput.focus();
+		// Focus first input if computer
+		if ('ontouchstart' in window === false) {
+			const firstInput = document.getElementById('digit-0') as HTMLInputElement;
+			firstInput.focus();
+		}
 	}
 
 	function onDigitInput(event: InputEvent) {
