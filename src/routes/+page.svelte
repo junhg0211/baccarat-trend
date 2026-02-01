@@ -58,6 +58,8 @@
 		// follow baccarat shoe board rules to place session
 		const [row, col, pr, pc] = getScorePosition(0, i);
 		data[row][col] = { session, enable: true, previous: [pr, pc] };
+
+		dataUpdateStack.push({ row, col });
 	}
 
 	function getScorePosition(row: number, col: number): number[] {
@@ -184,6 +186,53 @@
 			confirmInput();
 		}
 	}
+
+	const KEYS = 'A234567890JQK';
+
+	function clickKey(key: string) {
+		return () => {
+			const inputs = Array.from({ length: 6 }, (_, idx) => {
+				return document.getElementById(`digit-${idx}`) as HTMLInputElement;
+			});
+
+			for (const input of inputs) {
+				if (input.value === '') {
+					input.value = key;
+					const event = new Event('input', { bubbles: true });
+					input.dispatchEvent(event);
+					break;
+				}
+			}
+		};
+	}
+
+	function cancelInput() {
+		const inputs = Array.from({ length: 6 }, (_, idx) => {
+			return document.getElementById(`digit-${idx}`) as HTMLInputElement;
+		});
+
+		for (const input of inputs) {
+			input.value = '';
+		}
+
+		const firstInput = document.getElementById('digit-0') as HTMLInputElement;
+		firstInput.focus();
+	}
+
+	const dataUpdateStack = [];
+
+	function undoLast() {
+		const last = dataUpdateStack.pop();
+		if (!last) {
+			return;
+		}
+		const { row, col } = last;
+		data[row][col] = {
+			session: { player: 0, banker: 0, playerPair: false, bankerPair: false },
+			enable: false,
+			previous: [-1, -1]
+		};
+	}
 </script>
 
 <div class="container">
@@ -211,6 +260,14 @@
 				onkeydown={onKeyDown}
 			/>
 		{/each}
+	</div>
+	<div class="keyboard">
+		<button onclick={undoLast} class="key">Undo</button>
+		{#each KEYS.split('') as key}
+			<button onclick={clickKey(key)} class="key">{key}</button>
+		{/each}
+		<button onclick={cancelInput} class="key">Clear</button>
+		<button onclick={confirmInput} class="key">Enter</button>
 	</div>
 </div>
 
@@ -252,5 +309,16 @@
 		text-align: center;
 		border-radius: 4px;
 		border: none;
+	}
+
+	.key {
+		min-width: 40px;
+		height: 40px;
+		margin: 2px;
+		font-size: 18px;
+		border-radius: 4px;
+		border: none;
+		background-color: white;
+		cursor: pointer;
 	}
 </style>
