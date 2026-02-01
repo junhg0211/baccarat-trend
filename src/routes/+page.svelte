@@ -109,11 +109,11 @@
 			if (value === 'A') {
 				return 1;
 			} else if (value === 'J') {
-				return 0;
-			} else if (value === 'Q') {
 				return 0.1;
-			} else if (value === 'K') {
+			} else if (value === 'Q') {
 				return 0.2;
+			} else if (value === 'K') {
+				return 0.3;
 			} else {
 				return parseInt(value) || 0;
 			}
