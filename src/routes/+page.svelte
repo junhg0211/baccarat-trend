@@ -198,8 +198,6 @@
 			for (const input of inputs) {
 				if (input.value === '') {
 					input.value = key;
-					const event = new Event('input', { bubbles: true });
-					input.dispatchEvent(event);
 					break;
 				}
 			}
