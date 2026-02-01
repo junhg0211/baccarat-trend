@@ -1,7 +1,6 @@
 import adapter from '@sveltejs/adapter-static';
-import { Config } from '@sveltejs/kit';
 
-const config: Config = {
+const config = {
 	kit: {
 		adapter: adapter({
 			pages: 'build',
