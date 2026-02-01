@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import CellFiller from '$lib/components/CellFiller.svelte';
 	import { type Session } from '$lib/types/session';
 	import { RED, BLUE } from '$lib/consts/colors';
@@ -235,6 +236,14 @@
 			previous: [-1, -1]
 		};
 	}
+
+	onMount(() => {
+		// Focus first input on mount if computer
+		if ('ontouchstart' in window === false) {
+			const firstInput = document.getElementById('digit-0') as HTMLInputElement;
+			firstInput.focus();
+		}
+	});
 </script>
 
 <div class="container">
