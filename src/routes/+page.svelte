@@ -374,11 +374,11 @@
 	}
 
 	.input-digit {
-		width: 60px;
-		height: 60px;
+		width: 120px;
+		height: 120px;
 		margin: 4px;
 		padding: 0;
-		font-size: 24px;
+		font-size: 48px;
 		text-align: center;
 		border-radius: 4px;
 		border: none;
