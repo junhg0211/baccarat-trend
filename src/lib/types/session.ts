@@ -3,4 +3,5 @@ export type Session = {
 	banker: number;
 	playerPair: boolean;
 	bankerPair: boolean;
+	natural: boolean;
 };

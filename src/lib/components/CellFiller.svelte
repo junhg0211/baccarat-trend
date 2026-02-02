@@ -7,13 +7,10 @@
 		player: 0,
 		banker: 0,
 		playerPair: false,
-		bankerPair: false
+		bankerPair: false,
+		natural: false
 	};
 	export let enable: boolean = false;
-
-	function isNatural() {
-		return data.player >= 8 || data.banker >= 8;
-	}
 
 	function isTie() {
 		return data.player === data.banker;
@@ -38,7 +35,7 @@
 				stroke-width="10px"
 				bind:this={circleSvg}
 			/>
-			{#if isNatural()}
+			{#if data.natural}
 				<circle cx="50%" cy="50%" r="10px" fill={YELLOW} />
 			{/if}
 			{#if isTie()}
