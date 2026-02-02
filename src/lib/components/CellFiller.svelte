@@ -38,6 +38,9 @@
 				stroke-width="10px"
 				bind:this={circleSvg}
 			/>
+			{#if isNatural()}
+				<circle cx="50%" cy="50%" r="10px" fill={YELLOW} />
+			{/if}
 			{#if isTie()}
 				<line
 					x1="38px"
@@ -48,9 +51,6 @@
 					stroke-width="8px"
 					stroke-linecap="round"
 				/>
-			{/if}
-			{#if isNatural()}
-				<circle cx="50%" cy="50%" r="10px" fill={YELLOW} />
 			{/if}
 			{#if data.playerPair}
 				<circle cx="calc(50% - sqrt(2) * 10px)" cy="calc(50% - sqrt(2) * 10px)" r="10px" fill={RED}
