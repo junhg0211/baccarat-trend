@@ -4,8 +4,6 @@
 	import { type Session } from '$lib/types/session';
 	import { RED, BLUE } from '$lib/consts/colors';
 
-	const cells = Array.from({ length: 6 }, () => Array.from({ length: 20 }, () => null));
-
 	const data = Array.from({ length: 6 }, () =>
 		Array.from({ length: 20 }, () => {
 			return {
@@ -15,6 +13,27 @@
 			};
 		})
 	);
+  let dataUpdate = 0;
+
+	function shiftLeft() {
+		for (let j = 0; j < data.length; j++) {
+			for (let k = 0; k < data[j].length; k++) {
+				const datum = data[j][k + 1];
+				if (datum) {
+					datum.previous = [datum.previous[0], datum.previous[1] - 1];
+					data[j][k] = JSON.parse(JSON.stringify(datum));
+          dataUpdate++;
+				} else {
+					data[j][k] = {
+						session: { player: 0, banker: 0, playerPair: false, bankerPair: false },
+						enable: false,
+						previous: [-1, -1]
+					};
+          dataUpdate++;
+				}
+			}
+		}
+	}
 
 	function appendSession(session: Session) {
 		const playerWon = session.player >= session.banker;
@@ -23,8 +42,8 @@
 
 		// find index where next session is empty
 		let i;
-		for (i = 0; i <= cells[0].length; i++) {
-			if (i === cells[0].length) {
+		for (i = 0; i <= data[0].length; i++) {
+			if (i === data[0].length) {
 				break;
 			}
 
@@ -33,6 +52,13 @@
 			}
 
 			const iPlayerWon = data[0][i].session.player >= data[0][i].session.banker;
+
+			if (i + 1 === data[0].length) {
+				if (playerWon !== iPlayerWon) {
+					i++;
+				}
+				break;
+			}
 
 			if (!data[0][i + 1].enable) {
 				if (playerWon === iPlayerWon) {
@@ -44,23 +70,16 @@
 			}
 		}
 
-		if (i === cells[0].length) {
-			for (let j = 0; j < data.length; j++) {
-				for (let k = 0; k < data[j].length; k++) {
-					const datum = data[j][k + 1];
-					data[j][k] = data[j][k + 1] || {
-						session: { player: 0, banker: 0, playerPair: false, bankerPair: false },
-						enable: false,
-						previous: [datum.previous[0], datum.previous[1] - 1]
-					};
-				}
-			}
+		// shift left if index exceed board width
+		if (i === data[0].length) {
+			shiftLeft();
 			i--;
 		}
 
 		// follow baccarat shoe board rules to place session
 		const [row, col, pr, pc] = getScorePosition(0, i);
 		data[row][col] = { session, enable: true, previous: [pr, pc] };
+    dataUpdate++;
 
 		dataUpdateStack.push({ row, col });
 	}
@@ -74,6 +93,10 @@
 		let prevRow = row;
 		let prevCol = col;
 		while (true) {
+			while (col >= data[0].length) {
+				col--;
+				shiftLeft();
+			}
 			if (!data[row][col].enable) {
 				return [row, col, prevRow, prevCol];
 			}
@@ -235,6 +258,7 @@
 			enable: false,
 			previous: [-1, -1]
 		};
+    dataUpdate++;
 	}
 
 	onMount(() => {
@@ -248,16 +272,18 @@
 
 <div class="container">
 	<div class="board">
-		{#each Array(6) as _, index}
-			<div class="row">
-				{#each Array(20) as _, jndex}
-					<div class="cell" id="cell-{index}-{jndex}" bind:this={cells[index][jndex]}>
-						<CellFiller data={data[index][jndex].session} enable={data[index][jndex].enable}
-						></CellFiller>
-					</div>
-				{/each}
-			</div>
-		{/each}
+    {#key dataUpdate}
+      {#each Array(6) as _, index}
+        <div class="row">
+          {#each Array(20) as _, jndex}
+            <div class="cell" id="cell-{index}-{jndex}">
+              <CellFiller data={data[index][jndex].session} enable={data[index][jndex].enable}
+              ></CellFiller>
+            </div>
+          {/each}
+        </div>
+      {/each}
+    {/key}
 	</div>
 	<div class="input">
 		{#each Array(6) as _, idx}
