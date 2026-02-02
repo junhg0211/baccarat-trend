@@ -13,7 +13,7 @@
 			};
 		})
 	);
-  let dataUpdate = 0;
+	let dataUpdate = 0;
 
 	function shiftLeft() {
 		for (let j = 0; j < data.length; j++) {
@@ -22,14 +22,14 @@
 				if (datum) {
 					datum.previous = [datum.previous[0], datum.previous[1] - 1];
 					data[j][k] = JSON.parse(JSON.stringify(datum));
-          dataUpdate++;
+					dataUpdate++;
 				} else {
 					data[j][k] = {
 						session: { player: 0, banker: 0, playerPair: false, bankerPair: false },
 						enable: false,
 						previous: [-1, -1]
 					};
-          dataUpdate++;
+					dataUpdate++;
 				}
 			}
 		}
@@ -79,7 +79,7 @@
 		// follow baccarat shoe board rules to place session
 		const [row, col, pr, pc] = getScorePosition(0, i);
 		data[row][col] = { session, enable: true, previous: [pr, pc] };
-    dataUpdate++;
+		dataUpdate++;
 
 		dataUpdateStack.push({ row, col });
 	}
@@ -258,7 +258,38 @@
 			enable: false,
 			previous: [-1, -1]
 		};
-    dataUpdate++;
+		dataUpdate++;
+	}
+
+	function save() {
+		const toSave = data.map((row) =>
+			row.map((cell) => ({
+				session: cell.session,
+				enable: cell.enable,
+				previous: cell.previous
+			}))
+		);
+		localStorage.setItem('baccaratBoardData', JSON.stringify(toSave));
+		alert('Data saved!');
+	}
+
+	function load() {
+		const savedData = localStorage.getItem('baccaratBoardData');
+		if (savedData) {
+			const parsedData = JSON.parse(savedData);
+			for (let i = 0; i < data.length; i++) {
+				for (let j = 0; j < data[i].length; j++) {
+					data[i][j] = {
+						session: parsedData[i][j].session,
+						enable: parsedData[i][j].enable,
+						previous: parsedData[i][j].previous
+					};
+				}
+			}
+			dataUpdate++;
+		} else {
+			alert('No saved data found.');
+		}
 	}
 
 	onMount(() => {
@@ -272,18 +303,18 @@
 
 <div class="container">
 	<div class="board">
-    {#key dataUpdate}
-      {#each Array(6) as _, index}
-        <div class="row">
-          {#each Array(20) as _, jndex}
-            <div class="cell" id="cell-{index}-{jndex}">
-              <CellFiller data={data[index][jndex].session} enable={data[index][jndex].enable}
-              ></CellFiller>
-            </div>
-          {/each}
-        </div>
-      {/each}
-    {/key}
+		{#key dataUpdate}
+			{#each Array(6) as _, index}
+				<div class="row">
+					{#each Array(20) as _, jndex}
+						<div class="cell" id="cell-{index}-{jndex}">
+							<CellFiller data={data[index][jndex].session} enable={data[index][jndex].enable}
+							></CellFiller>
+						</div>
+					{/each}
+				</div>
+			{/each}
+		{/key}
 	</div>
 	<div class="input">
 		{#each Array(6) as _, idx}
@@ -299,6 +330,8 @@
 		{/each}
 	</div>
 	<div class="keyboard">
+		<button onclick={save} class="key">Save</button>
+		<button onclick={load} class="key">Load</button>
 		<button onclick={undoLast} class="key">Undo</button>
 		{#each KEYS.split('') as key}
 			<button onclick={clickKey(key)} class="key">{key}</button>
