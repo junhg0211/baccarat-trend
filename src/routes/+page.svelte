@@ -25,7 +25,7 @@
 					dataUpdate++;
 				} else {
 					data[j][k] = {
-            session: { player: 0, banker: 0, playerPair: false, bankerPair: false, natural: false },
+						session: { player: 0, banker: 0, playerPair: false, bankerPair: false, natural: false },
 						enable: false,
 						previous: [-1, -1]
 					};
@@ -147,7 +147,7 @@
 			banker: parseInt(inputs[1] + inputs[3] + inputs[5]) % 10,
 			playerPair: inputs[0] === inputs[2],
 			bankerPair: inputs[1] === inputs[3],
-      natural: inputs[0] + inputs[2] >= 8 || inputs[1] + inputs[3] >= 8
+			natural: (inputs[0] + inputs[2]) % 10 >= 8 || (inputs[1] + inputs[3]) % 10 >= 8
 		};
 
 		appendSession(session);
