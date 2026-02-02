@@ -242,7 +242,10 @@
 		}
 
 		const firstInput = document.getElementById('digit-0') as HTMLInputElement;
-		firstInput.focus();
+		if ('ontouchstart' in window === false) {
+			const firstInput = document.getElementById('digit-0') as HTMLInputElement;
+			firstInput.focus();
+		}
 	}
 
 	const dataUpdateStack = [];
@@ -382,13 +385,21 @@
 	}
 
 	.key {
-		min-width: 40px;
-		height: 40px;
+		min-width: 60px;
+		height: 60px;
 		margin: 2px;
-		font-size: 18px;
+		font-size: 24px;
 		border-radius: 4px;
 		border: none;
 		background-color: white;
 		cursor: pointer;
+	}
+
+	.key:hover {
+		background-color: #e0e0e0;
+	}
+
+	.key:active {
+		background-color: #d0d0d0;
 	}
 </style>
