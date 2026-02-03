@@ -302,6 +302,8 @@
 			const firstInput = document.getElementById('digit-0') as HTMLInputElement;
 			firstInput.focus();
 		}
+
+		load();
 	});
 </script>
 
@@ -335,7 +337,6 @@
 	</div>
 	<div class="keyboard">
 		<button onclick={save} class="key">Save</button>
-		<button onclick={load} class="key">Load</button>
 		<button onclick={undoLast} class="key">Undo</button>
 		{#each KEYS.split('') as key}
 			<button onclick={clickKey(key)} class="key">{key}</button>
